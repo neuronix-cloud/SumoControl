@@ -5,4 +5,5 @@ while ! ping -c 1 192.168.2.1
 do echo Trying to connect ; sleep 1
 done
 echo "Connected"
+sudo route del default wlan0
 node index.js
