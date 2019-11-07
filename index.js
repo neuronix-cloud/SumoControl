@@ -29,14 +29,20 @@ function Main() {
         res.send(myDrone.getImage())
     })
 
-    app.get("/move/:dir", function (req, res) {
+    app.get("/move/:dir/:size/:time", function (req, res) {
+        console.log(req.params)
         var dir = req.params['dir']
+        var size = req.params['size']
+        var time = req.params['time']
+        size = size == 0 ? -1 : size
+        time = time == 0 ? 100 : time 
         myDrone.move(dir)
-        setTimeout(function() {
-            myDrone.stopMoving(dir);
-            res.set('Content-Type', "image/jpeg")
-            res.send(myDrone.getImage())    
-        },100)
+        if(myDrone.control(dir, size))
+            setTimeout(function() {
+                myDrone.stopMoving(dir);
+                res.set('Content-Type', "image/jpeg")
+                res.send(myDrone.getImage())    
+            },time)
     })
 
     http.listen(PORT, function () {
