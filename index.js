@@ -25,8 +25,10 @@ function Main() {
     });
 
     app.get('/image', function(req,res) {
-        res.set('Content-Type', "image/jpeg")
-        res.send(myDrone.getImage())
+        myDrone.getImage(function(data) {
+            res.set('Content-Type', "image/jpeg")
+            res.send(data)
+        })
     })
 
     app.get("/move/:dir/:size/:time", function (req, res) {
@@ -36,12 +38,16 @@ function Main() {
         var time = req.params['time']
         size = size == 0 ? -1 : size
         time = time == 0 ? 100 : time 
+	    console.log("moving to ", dir, " for ", time)
         myDrone.move(dir)
         if(myDrone.control(dir, size))
             setTimeout(function() {
+                console.log("stop")
                 myDrone.stopMoving(dir);
-                res.set('Content-Type', "image/jpeg")
-                res.send(myDrone.getImage())    
+                myDrone.getImage(function(data) {
+                    res.set('Content-Type', "image/jpeg")
+                    res.send(data)
+                })
             },time)
     })
 
