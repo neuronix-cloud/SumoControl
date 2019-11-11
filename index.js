@@ -31,16 +31,14 @@ function Main() {
         })
     })
 
-    app.get("/move/:dir/:size/:time", function (req, res) {
+    app.get("/move/:dir/:speed/:time", function (req, res) {
         console.log(req.params)
         var dir = req.params['dir']
-        var size = req.params['size']
+        var speed = req.params['speed']
         var time = req.params['time']
-        size = size == 0 ? -1 : size
-        time = time == 0 ? 100 : time 
-	    console.log("moving to ", dir, " for ", time)
-        myDrone.move(dir)
-        if(myDrone.control(dir, size))
+	    console.log("moving ", dir, "for", time, "at", speed)
+        myDrone.moveAtSpeed(dir, speed)
+        if(myDrone.control(dir, speed))
             setTimeout(function() {
                 console.log("stop")
                 myDrone.stopMoving(dir);
