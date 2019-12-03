@@ -1,2 +1,5 @@
 /node_modules/
 /index-nodrone.js
+public/index.html
+public/js/script.js
+.DS_Store

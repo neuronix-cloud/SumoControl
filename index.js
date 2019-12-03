@@ -24,9 +24,33 @@ function Main() {
         myDrone.serveDroneVideo(req, res);
     });
 
+    app.get('/image', function(req,res) {
+        myDrone.getImage(function(data) {
+            res.set('Content-Type', "image/jpeg")
+            res.send(data)
+        })
+    })
+
+    app.get("/move/:dir/:speed/:time", function (req, res) {
+        console.log(req.params)
+        var dir = req.params['dir']
+        var speed = req.params['speed']
+        var time = req.params['time']
+	    console.log("moving ", dir, "for", time, "at", speed)
+        myDrone.moveAtSpeed(dir, speed)
+        if(myDrone.control(dir, speed))
+            setTimeout(function() {
+                console.log("stop")
+                myDrone.stopMoving(dir);
+                myDrone.getImage(function(data) {
+                    res.set('Content-Type', "image/jpeg")
+                    res.send(data)
+                })
+            },time)
+    })
+
     http.listen(PORT, function () {
         console.log('HTTP Server listening on *:' + PORT);
-        open('http://127.0.0.1:' + PORT);
     });
 
     io.on('connection', function (socket) {
